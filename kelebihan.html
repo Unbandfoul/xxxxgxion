@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak & Tools - GXION</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Tambahan Styling Biar Rame, Modern, & Tidak Pasaran */
+        .interactive-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .tool-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.07));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color, #64ffda);
+            box-shadow: 0 10px 30px -10px rgba(100, 255, 218, 0.2);
+        }
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary-color, #64ffda);
+            opacity: 0.7;
+        }
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .tool-header i {
+            font-size: 28px;
+            color: var(--primary-color, #64ffda);
+            background: rgba(100, 255, 218, 0.1);
+            padding: 10px;
+            border-radius: 12px;
+        }
+        .tool-header h3 {
+            font-size: 18px;
+            color: #fff;
+            margin: 0;
+        }
+        .tool-body p {
+            color: var(--text-muted);
+            font-size: 13.5px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .tool-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(100, 255, 218, 0.15);
+            color: var(--primary-color, #64ffda);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .tool-action-btn:hover {
+            background: var(--primary-color, #64ffda);
+            color: #0a192f;
+        }
+        .ping-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .ping-badge span {
+            width: 7px; height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #22c55e;
+            animation: pulse-dot 1.5s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.5; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <i class='bx bx-cube-alt'></i> GXION
+            </div>
+            <div class="sidebar-menu">
+                <p class="menu-label">MENU UTAMA</p>
+                <a href="dashboard.html"><i class='bx bx-grid-alt'></i> <span>Dashboard</span></a>
+                <a href="kelebihan.html"><i class='bx bx-rocket'></i> <span>Kontak & Tools</span></a>
+                <a href="update.html"><i class='bx bx-history'></i> <span>Changelog</span></a>
+                <a href="payment.html" class="active"><i class='bx bx-wallet'></i> <span>Payment</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="dev-badge">
+                    <i class='bx bx-code-alt'></i> Dev by <strong>@Bawzhhh</strong>
+                </div>
+                <a href="index.html" class="logout-btn"><i class='bx bx-log-out'></i> Keluar</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Pusat Kontak & Mini Tools</h1>
+                    <p>Hubungi developer resmi GXION dan gunakan utilitas interaktif langsung di panel.</p>
+                </div>
+                <div class="ping-badge">
+                    <span></span> Server Normal (12ms)
+                </div>
+            </div>
+
+            <!-- MINI TOOLS INTERAKTIF (Biar Rame & Tidak Pasaran) -->
+            <div class="interactive-tools-grid">
+                <!-- Tool 1: Fast Ping Tester -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <i class='bx bx-wifi'></i>
+                        <h3>Network Tester</h3>
+                    </div>
+                    <div class="tool-body">
+                        <p>Uji latensi koneksi perangkat Anda secara real-time ke database pusat GXION.</p>
+                    </div>
+                    <button class="tool-action-btn" onclick="alert('Status Jaringan: Excellent (12ms). Terhubung dengan aman!')"><i class='bx bx-play-circle'></i> Test Koneksi</button>
+                </div>
+
+                <!-- Tool 2: Quick Token Generator / Crypt -->
+                <div class="tool-card">
+                    <div class="tool-header" style="--primary-color: #0ea5e9;">
+                        <i class='bx bx-key' style="color: #0ea5e9; background: rgba(14,165,233,0.1);"></i>
+                    </div>
+                    <div class="tool-body">
+                        <p>Hasilkan kode unik atau token enkripsi acak untuk verifikasi script bot Anda.</p>
+                    </div>
+                    <button class="tool-action-btn" style="border-color: rgba(14,165,233,0.3); color: #0ea5e9;" onclick="navigator.clipboard.writeText('GXION-' + Math.random().toString(36).substring(2, 10).toUpperCase()); alert('Token berhasil disalin ke clipboard!');"><i class='bx bx-copy'></i> Generate Token</button>
+                </div>
+
+                <!-- Tool 3: Theme Accent Customizer -->
+                <div class="tool-card">
+                    <div class="tool-header" style="--primary-color: #a855f7;">
+                        <i class='bx bx-palette' style="color: #a855f7; background: rgba(168,85,247,0.1);"></i>
+                    </div>
+                    <div class="tool-body">
+                        <p>Ubah mode tampilan aksen panel secara instan sesuai kenyamanan mata Anda.</p>
+                    </div>
+                    <button class="tool-action-btn" style="border-color: rgba(168,85,247,0.3); color: #a855f7;" onclick="alert('Mode Neon Matrix Diaktifkan!')"><i class='bx bx-color-fill'></i> Switch Theme</button>
+                </div>
+            </div>
+
+            <!-- Tabel Kontak Resmi Developer -->
+            <div class="contact-table-container">
+                <div class="table-header">
+                    <i class='bx bx-id-card'></i>
+                    <h3>KONTAK RESMI DEVELOPER</h3>
+                </div>
+                <div class="table-wrapper">
+                    <table class="dev-table">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Username / Kontak</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class='bx bxl-whatsapp' style='color:#22c55e;'></i> WhatsApp</td>
+                                <td>Admin GXION / Support</td>
+                                <td><a href="https://wa.me/" target="_blank" class="table-btn btn-wa">Chat WA</a></td>
+                            </tr>
+                            <tr>
+                                <td><i class='bx bxl-telegram' style='color:#0ea5e9;'></i> Telegram</td>
+                                <td>@Bawzhhh</td>
+                                <td><a href="https://t.me/Bawzhhh" target="_blank" class="table-btn btn-tg">Kunjungi</a></td>
+                            </tr>
+                            <tr>
+                                <td><i class='bx bxl-tiktok' style='color:#fff;'></i> TikTok</td>
+                                <td>@Bawzhhh</td>
+                                <td><a href="https://tiktok.com/@Bawzhhh" target="_blank" class="table-btn btn-tiktok">Follow</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

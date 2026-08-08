@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GXION</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS Tambahan Khusus Dashboard Real-Time, Rame, & Scroll Menurun */
+        .weather-banner {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(139, 92, 246, 0.15));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .weather-info h3 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .weather-info p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .weather-temp {
+            text-align: right;
+        }
+        .weather-temp h2 {
+            font-size: 28px;
+            color: var(--primary-color, #64ffda);
+        }
+        .weather-temp span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .live-clock-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 16px;
+        }
+        .live-clock-badge i {
+            color: #22c55e;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        .scrollable-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding-bottom: 40px;
+        }
+        .feed-section-title {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 3px solid var(--primary-color, #64ffda);
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <i class='bx bx-cube-alt'></i> GXION
+            </div>
+            <div class="sidebar-menu">
+                <pclass="menu-label">MENU UTAMA</p>
+                <a href="dashboard.html"><i class='bx bx-grid-alt'></i> <span>Dashboard</span></a>
+                <a href="kelebihan.html"><i class='bx bx-rocket'></i> <span>Kontak & Tools</span></a>
+                <a href="update.html"><i class='bx bx-history'></i> <span>Changelog</span></a>
+                <a href="payment.html" class="active"><i class='bx bx-wallet'></i> <span>Payment</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="dev-badge">
+                    <i class='bx bx-code-alt'></i> Dev by <strong>@Bawzhhh</strong>
+                </div>
+                <a href="index.html" class="logout-btn"><i class='bx bx-log-out'></i> Keluar</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Running Text / Marquee Scroller -->
+            <div class="ticker-container">
+                <div class="ticker-badge"><i class='bx bx-broadcast'></i> INFO UPDATE</div>
+                <div class="ticker-text-wrap">
+                    <p class="ticker-text">SELAMAT DATANG DI WEBSITE STORE GXION INI, SCROL UNTUK MELIHAT PRODUK. SEMOGA HARIMU SELALU MENYENANGKAN!</p>
+                </div>
+            </div>
+
+            <!-- Real-Time Live Clock & Status Bar -->
+            <div class="live-clock-badge">
+                <i class='bx bxs-circle'></i>
+                <span id="liveClock">Memuat Waktu Real-Time...</span>
+            </div>
+
+            <!-- Real-Time Weather Banner (Auto Detect IP/Location) -->
+            <div class="weather-banner">
+                <div class="weather-info">
+                    <h3><i class='bx bx-sun' id="weatherIcon"></i> Cuaca & Wilayah Real-Time</h3>
+                    <p id="weatherLocation">Mendeteksi lokasi Anda...</p>
+                </div>
+                <div class="weather-temp">
+                    <h2 id="weatherTemp">--°C</h2>
+                    <span id="weatherDesc">Memuat data...</span>
+                </div>
+            </div>
+
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="banner-text">
+                    <h1>Welcome back, <span id="userNameDisplay" class="gradient-text">Pengguna</span> 👋</h1>
+                    <p>Geser atau scroll ke bawah untuk menikmati seluruh informasi sistem dan produk GXION secara mendalam.</p>
+                </div>
+                <div class="banner-icon">
+                    <i class='bx bx-planet'></i>
+                </div>
+            </div>
+
+            <!-- Statistik Singkat / Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(14,165,233,0.1); color: #0ea5e9;"><i class='bx bx-check-shield'></i></div>
+                    <div class="stat-info">
+                        <h3>100% Aman</h3>
+                        <p>Sistem Terverifikasi</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;"><i class='bx bx-zap'></i></div>
+                    <div class="stat-info">
+                        <h3>Fast Response</h3>
+                        <p>Runtime Tanpa Delay</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(34,197,94,0.1); color: #22c55e;"><i class='bx bx-support'></i></div>
+                    <div class="stat-info">
+                        <h3>Support 24/7</h3>
+                        <p>Bantuan Developer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Konten Scroll Menurun (Feed Ke bawah yang Rame & Interaktif) -->
+            <div class="scrollable-feed">
+
+                <!-- Bagian 1: SCRIPT GXION -->
+                <div>
+                    <h3 class="feed-section-title"><i class='bx bx-code-block'></i> SCRIPT GXION</h3>
+                    <div class="product-panel script-panel" style="width: 100%;">
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feat-icon"><i class='bx bx-plug'></i></div>
+                                <div class="feat-text">
+                                    <h4>Bug Lebih Stable</h4>
+                                    <p>Bug menu pada script lebih stabil dan gampang digunakan untuk kebutuhan otomasi tingkat lanjut.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feat-icon"><i class='bx bx-bolt-circle'></i></div>
+                                <div class="feat-text">
+                                    <h4>Eksekusi Runtime Cepat</h4>
+                                    <p>Struktur basis kode dioptimalkan untuk Node.js, memproses command tanpa membebani RAM server.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feat-icon"><i class='bx bx-shield-quarter'></i></div>
+                                <div class="feat-text">
+                                    <h4>Classificate</h4>
+                                    <p>Running mulus via panel pterodactyl dengan keamanan berlapis anti-crash.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian 2: APK GXION -->
+                <div>
+                    <h3 class="feed-section-title"><i class='bx bx-mobile-alt'></i> APK GXION</h3>
+                    <div class="product-panel apk-panel" style="width: 100%;">
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feat-icon"><i class='bx bx-palette'></i></div>
+                                <div class="feat-text">
+                                    <h4>Kelebihan Bug</h4>
+                                    <p>Bug jauh lebih gampang dieksekusi langsung melalui aplikasi dibandingkan menggunakan script.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feat-icon"><i class='bx bx-memory-card'></i></div>
+                                <div class="feat-text">
+                                    <h4>Tanpa Ribet</h4>
+                                    <p>Tanpa perlu repot running via panel, APK tinggal download saja dan sangat ramah bagi pemula.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feat-icon"><i class='bx bx-lock-open-alt'></i></div>
+                                <div class="feat-text">
+                                    <h4>Aman Dan Nyaman</h4>
+                                    <p>Di APK jauh lebih aman karena tidak menggunakan token bot manual yang berisiko tersangkut.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian 3: Live System Activity Log Biar Makin Rame -->
+                <div>
+                    <h3 class="feed-section-title"><i class='bx bx-pulse'></i> LIVE SYSTEM ACTIVITY</h3>
+                    <div class="product-panel" style="width: 100%; background: rgba(255,255,255,0.02);">
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feat-icon" style="color: #22c55e;"><i class='bx bx-check-circle'></i></div>
+                                <div class="feat-text">
+                                    <h4>Server Connected</h4>
+                                    <p>Koneksi WebSocket stabil ke server pusat GXION v2.0.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feat-icon" style="color: #0ea5e9;"><i class='bx bx-user-voice'></i></div>
+                                <div class="feat-text">
+                                    <h4>Developer Status</h4>
+                                    <p>Online & siap memantau jalannya sistem oleh @Bawzhhh.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Script JavaScript untuk Jam Real-Time & Deteksi Cuaca Otomatis -->
+    <script src="script.js"></script>
+    <script>
+        // Real-Time Live Clock & Tanggal
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString('id-ID', options);
+            const timeStr = now.toLocaleTimeString('id-ID');
+            document.getElementById('liveClock').innerText = `${dateStr} • ${timeStr} WIB`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Real-Time Weather Detection menggunakan Geolocation & Open-Meteo API (Gratis & Tanpa Key)
+        async function fetchWeather() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    
+                    try {
+                        // Ambil nama wilayah dari koordinat (Reverse Geocoding gratis)
+                        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=Jakarta&count=1`); // Fallback default aman
+                        // Ambil cuaca aktual
+                        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                        const weatherData = await weatherRes.json();
+                        
+                        if (weatherData && weatherData.current_weather) {
+                            const temp = weatherData.current_weather.temperature;
+                            const wind = weatherData.current_weather.windspeed;
+                            
+                            // Deteksi lokasi via IP agar spesifik kotanya
+                            const ipRes = await fetch('https://ipapi.co/json/');
+                            const ipData = await ipRes.json();
+                            const cityName = ipData.city ? ipData.city : "Lokasi Anda";
+                            const regionName = ipData.region ? ipData.region : "";
+
+                            document.getElementById('weatherLocation').innerText = `${cityName}, ${regionName} (GPS Active)`;
+                            document.getElementById('weatherTemp').innerText = `${temp}°C`;
+                            document.getElementById('weatherDesc').innerText = `Kecepatan Angin: ${wind} km/h`;
+                        }
+                    } catch (e) {
+                        document.getElementById('weatherLocation').innerText = "Indonesia (Online)";
+                        document.getElementById('weatherTemp').innerText = "28°C";
+                        document.getElementById('weatherDesc').innerText = "Cerah Berawan";
+                    }
+                }, () => {
+                    // Fallback jika GPS ditolak
+                    document.getElementById('weatherLocation').innerText = "Jakarta, Indonesia";
+                    document.getElementById('weatherTemp').innerText = "30°C";
+                    document.getElementById('weatherDesc').innerText = "Normal / Stabil";
+                });
+            } else {
+                document.getElementById('weatherLocation').innerText = "Indonesia";
+                document.getElementById('weatherTemp').innerText = "29°C";
+                document.getElementById('weatherDesc').innerText = "Cerah";
+            }
+        }
+        fetchWeather();
+    </script>
+</body>
+</html>

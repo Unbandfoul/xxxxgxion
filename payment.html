@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway - GXION</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styling Modern, Glosir, & Efek Animasi Premium */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        .payment-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 30px 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        .payment-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(100, 255, 218, 0.1), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .payment-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: var(--card-glow, #64ffda);
+            box-shadow: 0 20px 40px -15px rgba(100, 255, 218, 0.25);
+        }
+        .payment-card:hover::after {
+            opacity: 1;
+        }
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 5px; height: 100%;
+            background: var(--card-glow, #64ffda);
+            box-shadow: 0 0 15px var(--card-glow, #64ffda);
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .payment-icon {
+            font-size: 36px;
+            color: var(--card-glow, #64ffda);
+            background: var(--icon-bg, rgba(100, 255, 218, 0.1));
+            width: 65px; height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+        .status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-badge span {
+            width: 6px; height: 6px; background: #22c55e; border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e;
+            animation: pulse-dot 1.5s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+        .payment-card h3 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        .payment-name {
+            color: var(--text-muted, #94a3b8);
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .number-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            padding: 14px 18px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .number-box code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1.5px;
+        }
+        .copy-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--btn-bg, rgba(100, 255, 218, 0.15));
+            color: var(--card-glow, #64ffda);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid var(--btn-border, rgba(100, 255, 218, 0.3));
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .copy-btn:hover {
+            background: var(--card-glow, #64ffda);
+            color: #0a192f;
+            box-shadow: 0 5px 20px var(--btn-glow, rgba(100, 255, 218, 0.4));
+            transform: translateY(-2px);
+        }
+        /* Informasi Instruksi Pembayaran */
+        .payment-info-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            backdrop-filter: blur(10px);
+        }
+        .payment-info-box i {
+            font-size: 32px;
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        .payment-info-box h4 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .payment-info-box p {
+            color: var(--text-muted, #94a3b8);
+            font-size: 13.5px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .payment-info-box p strong {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <i class='bx bx-cube-alt'></i> GXION
+            </div>
+            <div class="sidebar-menu">
+                <p class="menu-label">MENU UTAMA</p>
+                <a href="dashboard.html"><i class='bx bx-grid-alt'></i> <span>Dashboard</span></a>
+                <a href="kelebihan.html"><i class='bx bx-rocket'></i> <span>Kontak & Tools</span></a>
+                <a href="update.html"><i class='bx bx-history'></i> <span>Changelog</span></a>
+                <a href="payment.html" class="active"><i class='bx bx-wallet'></i> <span>Payment</span></a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="dev-badge">
+                    <i class='bx bx-code-alt'></i> Dev by <strong>@Bawzhhh</strong>
+                </div>
+                <a href="index.html" class="logout-btn"><i class='bx bx-log-out'></i> Keluar</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header" style="margin-bottom: 30px;">
+                <h1>Pusat Pembayaran Resmi</h1>
+                <p>Pilih metode transaksi di bawah ini untuk melakukan pembayaran produk atau layanan GXION.</p>
+            </div>
+
+            <!-- Grid Payment DANA & GOPAY (High Aesthetic & Non-Datar) -->
+            <div class="payment-grid">
+                <!-- DANA -->
+                <div class="payment-card" style="--card-glow: #38bdf8; --icon-bg: rgba(56, 189, 248, 0.1); --btn-bg: rgba(56, 189, 248, 0.15); --btn-border: rgba(56, 189, 248, 0.3); --btn-glow: rgba(56, 189, 248, 0.4);">
+                    <div class="card-top">
+                        <div class="payment-icon">
+                            <i class='bx bx-wallet-alt'></i>
+                        </div>
+                        <div class="status-badge">
+                            <span></span> Auto Verify
+                        </div>
+                    </div>
+                    <h3>DANA</h3>
+                    <div class="payment-name">
+                        <i class='bx bx-user-check'></i> A.N: <strong>PRIVATE</strong>
+                    </div>
+                    <div class="number-box">
+                        <code id="danaNum">08881370078</code>
+                    </div>
+                    <button class="copy-btn" onclick="copyNum('08881370078', 'Nomor DANA berhasil disalin!')">
+                        <i class='bx bx-copy'></i> Salin Nomor DANA
+                    </button>
+                </div>
+
+                <!-- GOPAY -->
+                <div class="payment-card" style="--card-glow: #0ea5e9; --icon-bg: rgba(14, 165, 233, 0.1); --btn-bg: rgba(14, 165, 233, 0.15); --btn-border: rgba(14, 165, 233, 0.3); --btn-glow: rgba(14, 165, 233, 0.4);">
+                    <div class="card-top">
+                        <div class="payment-icon">
+                            <i class='bx bx-mobile-alt'></i>
+                        </div>
+                        <div class="status-badge">
+                            <span></span> Auto Verify
+                        </div>
+                    </div>
+                    <h3>GOPAY</h3>
+                    <div class="payment-name">
+                        <i class='bx bx-user-check'></i> A.N: <strong>PRIVATE</strong>
+                    </div>
+                    <div class="number-box">
+                        <code id="gopayNum">08881370078</code>
+                    </div>
+                    <button class="copy-btn" onclick="copyNum('08881370078', 'Nomor GOPAY berhasil disalin!')">
+                        <i class='bx bx-copy'></i> Salin Nomor GOPAY
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kotak Informasi Instruksi Tambahan Biar Rame & Gak Sepi -->
+            <div class="payment-info-box">
+                <i class='bx bx-info-circle'></i>
+                <div>
+                    <h4>Instruksi Penting Transaksi</h4>
+                    <p>Setelah melakukan transfer ke nomor DANA atau GOPAY di atas, harap segera kirimkan bukti tangkapan layar (screenshot) struk pembayaran ke kontak WhatsApp atau Telegram resmi developer <strong>@Bawzhhh</strong> agar pesanan atau akses script bot Anda dapat langsung diproses.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script JavaScript untuk Tombol Salin & Notifikasi -->
+    <script src="script.js"></script>
+    <script>
+        function copyNum(text, msg) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(msg);
+            }).catch(err => {
+                alert('Gagal menyalin teks!');
+            });
+        }
+    </script>
+</body>
+</html>

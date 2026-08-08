@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Keamanan - GXION</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --accent-script: #0ea5e9;
+            --glow-script: rgba(14, 165, 233, 0.6);
+            --bg-dark: #030712;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .auth-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: radial-gradient(circle at 50% 30%, #1e1b4b 0%, var(--bg-dark) 75%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before, .auth-container::after {
+            content: '';
+            position: absolute;
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .auth-container::before {
+            width: 350px;
+            height: 350px;
+            background: rgba(14, 165, 233, 0.25);
+            top: 15%;
+            left: 20%;
+            animation: float-slow 8s ease-in-out infinite alternate;
+        }
+        .auth-container::after {
+            width: 400px;
+            height: 400px;
+            background: rgba(168, 85, 247, 0.2);
+            bottom: 10%;
+            right: 20%;
+            animation: float-slow 10s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes float-slow {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
+        }
+
+        .auth-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 45px 35px;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .brand-logo {
+            font-size: 52px;
+            color: var(--accent-script);
+            margin-bottom: 5px;
+            text-shadow: 0 0 25px var(--glow-script);
+            display: inline-flex;
+            background: rgba(14, 165, 233, 0.1);
+            padding: 16px;
+            border-radius: 22px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            box-shadow: inset 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+
+        .auth-card h1 {
+            font-size: 26px;
+            margin: 10px 0 6px 0;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1.5px;
+        }
+
+        .auth-card p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 13.5px;
+            line-height: 1.4;
+        }
+
+        /* Tampilan Captcha Kotak */
+        .captcha-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .captcha-box:hover {
+            border-color: var(--accent-script);
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+        .captcha-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .checkbox-custom {
+            width: 26px; height: 26px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .checkbox-custom i {
+            color: #030712;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .captcha-box.checked .checkbox-custom {
+            background: #22c55e;
+            border-color: #22c55e;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+        }
+        .captcha-box.checked .checkbox-custom i {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .captcha-text {
+            text-align: left;
+        }
+        .captcha-text span {
+            display: block;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .captcha-text small {
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+        .captcha-brand {
+            text-align: right;
+        }
+        .captcha-brand i {
+            font-size: 28px;
+            color: #0ea5e9;
+        }
+        .captcha-brand span {
+            display: block;
+            font-size: 9px;
+            color: var(--text-muted);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.5);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .btn-primary.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .btn-primary.active:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(14, 165, 233, 0.7);
+            background: linear-gradient(135deg, #38bdf8, #1d4ed8);
+        }
+
+        /* Layar Loading 10% - 100% */
+        .loading-screen {
+            position: absolute;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.95);
+            backdrop-filter: blur(30px);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .loading-screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .loading-logo {
+            font-size: 60px;
+            color: #0ea5e9;
+            margin-bottom: 20px;
+            animation: pulse-logo 1.5s infinite alternate;
+            text-shadow: 0 0 30px rgba(14, 165, 233, 0.8);
+        }
+        @keyframes pulse-logo {
+            0% { transform: scale(0.9); }
+            100% { transform: scale(1.1); }
+        }
+        .loading-title {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .loading-status {
+            color: var(--text-muted);
+            font-size: 13.5px;
+            margin-bottom: 25px;
+        }
+        .progress-container {
+            width: 280px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0ea5e9, #22c55e);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 15px #0ea5e9;
+        }
+        .progress-percentage {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 15px;
+            font-family: monospace;
+        }
+
+        .card-footer-dev {
+            margin-top: 25px;
+            font-size: 12px;
+            color: rgba(148, 163, 184, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .card-footer-dev strong {
+            color: var(--accent-script);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Kartu Verifikasi Manusia -->
+        <div class="auth-card" id="verifyCard">
+            <div class="brand-logo">
+                <i class='bx bx-shield-quarter'></i>
+            </div>
+            <h1>VERIFIKASI SISTEM</h1>
+            <p>Buktikan bahwa Anda adalah manusia sebelum mengakses panel utama GXION.</p>
+            
+            <div class="captcha-box" id="captchaBox" onclick="toggleCaptcha()">
+                <div class="captcha-left">
+                    <div class="checkbox-custom" id="checkCircle">
+                        <i class='bx bx-check'></i>
+                    </div>
+                    <div class="captcha-text">
+                        <span>Saya bukan robot</span>
+                        <small id="statusSub">Klik untuk verifikasi</small>
+                    </div>
+                </div>
+                <div class="captcha-brand">
+                    <i class='bx bx-bot'></i>
+                    <span>GXION-SEC</span>
+                </div>
+            </div>
+
+            <button type="button" class="btn-primary" id="proceedBtn" onclick="startLoading()">Lanjutkan ke Panel <i class='bx bx-right-arrow-alt' style="vertical-align: middle; margin-left: 5px;"></i></button>
+
+            <div class="card-footer-dev">
+                <i class='bx bx-code-alt'></i> Secured by <strong>@Bawzhhh</strong>
+            </div>
+        </div>
+
+        <!-- Layar Loading 10% - 100% -->
+        <div class="loading-screen" id="loadingScreen">
+            <div class="loading-logo">
+                <i class='bx bx-cube-alt'></i>
+            </div>
+            <div class="loading-title">MEMUAT SISTEM GXION</div>
+            <div class="loading-status" id="loadingText">Menyiapkan konfigurasi database...</div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-percentage" id="progressNum">10%</div>
+        </div>
+    </div>
+    
+    <script>
+        let isVerified = false;
+
+        function toggleCaptcha() {
+            const box = document.getElementById('captchaBox');
+            const sub = document.getElementById('statusSub');
+            const btn = document.getElementById('proceedBtn');
+
+            if (!isVerified) {
+                sub.textContent = "Memeriksa perangkat...";
+                setTimeout(() => {
+                    box.classList.add('checked');
+                    sub.textContent = "Verifikasi berhasil";
+                    btn.classList.add('active');
+                    isVerified = true;
+                }, 800);
+            }
+        }
+
+        function startLoading() {
+            if (!isVerified) return;
+
+            const loadingScreen = document.getElementById('loadingScreen');
+            const progressBar = document.getElementById('progressBar');
+            const progressNum = document.getElementById('progressNum');
+            const loadingText = document.getElementById('loadingText');
+
+            loadingScreen.classList.add('active');
+
+            let progress = 10;
+            
+            const statusMessages = [
+                { at: 20, text: "Memuat modul keamanan core..." },
+                { at: 45, text: "Menghubungkan ke server web-socket..." },
+                { at: 70, text: "Memuat data sistem & dashboard..." },
+                { at: 90, text: "Autentikasi sesi dev @Bawzhhh..." },
+                { at: 100, text: "Berhasil! Masuk ke sistem..." }
+            ];
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 4) + 2; // Naik bertahap acak
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html"; // Arahkan ke dashboard asli
+                    }, 500);
+                }
+
+                progressBar.style.width = progress + '%';
+                progressNum.textContent = progress + '%';
+
+                // Ubah teks status berdasarkan persentase
+                const currentMsg = statusMessages.find(m => progress >= m.at);
+                if (currentMsg) {
+                    loadingText.textContent = currentMsg.text;
+                }
+            }, 40);
+        }
+    </script>
+</body>
+</html>
